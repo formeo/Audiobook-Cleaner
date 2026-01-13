@@ -1,0 +1,8 @@
+# Core dependency
+audio-separator[cpu]>=0.17.0
+
+# GPU support (optional, uncomment for NVIDIA GPU)
+# torch>=2.0.0
+# torchaudio>=2.0.0
+# onnxruntime-gpu==1.18.1
+# nvidia-cudnn-cu12==8.9.7.29
