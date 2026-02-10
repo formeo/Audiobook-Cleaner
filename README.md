@@ -1,3 +1,5 @@
+![Downloads](https://img.shields.io/github/downloads/formeo/audiobook-cleaner/total)
+![Stars](https://img.shields.io/github/stars/formeo/audiobook-cleaner)
 # Audiobook Cleaner
 
 Clean audiobooks from background music and noise using MDX-Net, VR, and Roformer neural network models.
