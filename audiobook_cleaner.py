@@ -10,6 +10,8 @@
 Модели скачиваются автоматически при первом запуске (~100-300 MB каждая).
 """
 
+from __future__ import annotations
+
 import argparse
 import sys
 import subprocess
@@ -201,8 +203,8 @@ def concat_audio(input_files: list[Path], output_file: Path, output_format: str)
 
     list_file = output_file.parent / "concat_list.txt"
 
-    # Создаём файл со списком для ffmpeg с абсолютными путями (без BOM!)
-    with open(list_file, 'w', encoding='ascii', errors='replace') as f:
+    # Создаём файл со списком для ffmpeg с абсолютными путями (UTF-8 без BOM!)
+    with open(list_file, 'w', encoding='utf-8') as f:
         for file in input_files:
             # Используем прямые слэши для совместимости с ffmpeg
             abs_path = str(file.absolute()).replace('\\', '/')
@@ -292,6 +294,14 @@ def clean_audiobook_chunked(
         workers: int = 1,
 ) -> list[Path]:
     """Обрабатывает большой файл по частям с сохранением прогресса."""
+
+    # GPU + несколько процессов = OOM на одной карте и поломка CUDA после fork.
+    if workers > 1 and use_gpu:
+        logger.warning(
+            "--workers > 1 несовместимо с GPU; переключаюсь на CPU. "
+            "Для GPU оставьте workers=1."
+        )
+        use_gpu = False
 
     input_path = Path(input_file)
 
@@ -558,7 +568,7 @@ def _process_single_file(
             "segment_size": segment_size,
             "overlap": 0.25,
             "batch_size": 1,
-            "enable_denoise": denoise,
+            "enable_denoise": False,
         }
     )
 
